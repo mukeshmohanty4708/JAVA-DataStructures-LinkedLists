@@ -1,0 +1,70 @@
+Given a singly linked list, determine if it is a palindrome.
+
+Example 1:
+Input: 1->2
+Output: false
+
+Example 2:
+Input: 1->2->2->1
+Output: true
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    
+    private int length;
+    
+    public synchronized ListNode getSecondHalf(ListNode head){
+        ListNode fast = head; ListNode slow = head;
+
+        while(fast.next != null && fast != null){
+            if(fast.next.next != null){
+                fast = fast.next.next;
+                slow = slow.next;
+                ++length;
+            }
+            else
+                break;
+        }
+        return slow;
+    }
+    
+    public synchronized ListNode reverse(ListNode secondhalf){
+        ListNode prev = null;
+        ListNode curr = secondhalf;
+        
+        while(curr != null){
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        secondhalf = prev;
+        return secondhalf;
+    }
+    public boolean isPalindrome(ListNode head) {
+        
+        if(head == null) return true;
+        if(head.next == null) return true;
+        ListNode secondhalf = reverse(getSecondHalf(head));
+
+        while(length+1 > 0){
+            --length;
+            System.out.println(head.val+"-"+ secondhalf.val);
+            if(secondhalf.val != head.val)
+                return false;
+            head = head.next;
+            secondhalf = secondhalf.next;
+        }
+        return true;
+        
+    }
+}
