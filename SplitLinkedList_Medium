@@ -1,0 +1,68 @@
+Given a (singly) linked list with head node root, write a function to split the linked list into k consecutive linked list "parts".
+
+The length of each part should be as equal as possible: no two parts should have a size differing by more than 1. This may lead to some parts being null.
+
+The parts should be in order of occurrence in the input list, and parts occurring earlier should always have a size greater than or equal parts occurring later.
+
+Return a List of ListNode's representing the linked list parts that are formed.
+
+Examples 1->2->3->4, k = 5 // 5 equal parts [ [1], [2], [3], [4], null ]
+Example 1:
+
+Input:  root = [1, 2, 3], k = 5 Output: [[1],[2],[3],[],[]] Explanation: The input and each element of the output are ListNodes, 
+not arrays. For example, the input root has root.val = 1, root.next.val = 2, \root.next.next.val = 3, and root.next.next.next = null. 
+The first element output[0] has output[0].val = 1, output[0].next = null. The last element output[4] is null, but it's string representation as a ListNode is [].
+
+
+
+
+class Solution {
+    
+    public int getLength(ListNode root){
+        int len = 0;
+        while(root != null){
+            root = root.next;
+            len++;
+        }
+        return len;
+    }
+    public int[] getDivisions(int len, int k){
+        int[] arr = new int[k];
+        int list_len = len / k;
+        Arrays.fill(arr, list_len);
+        
+        int rem = len % k;
+        // System.out.println("rem: " + rem);
+        int count = 0;
+        while(rem > 0){
+            arr[count] = arr[count] + 1;
+            count++;
+            rem--;
+        }
+        return arr;
+    }
+    
+    public ListNode[] splitListToParts(ListNode root, int k) {
+        
+        ListNode[] op = new ListNode[k];
+        int len = getLength(root);
+        // System.out.println("len: " + len);
+        int[] arr = getDivisions(len, k);
+        int i = 0;
+        for(int x : arr){
+            ListNode tmp = new ListNode();
+            ListNode curr = tmp;
+            while(x > 0){
+                curr.next = new ListNode(root.val);
+                curr = curr.next;
+                root = root.next;
+                --x;
+            }
+            op[i] = tmp.next;
+            i++;
+        }
+        return op;
+
+        
+    }
+}
