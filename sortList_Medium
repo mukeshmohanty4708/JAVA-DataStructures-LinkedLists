@@ -1,0 +1,65 @@
+Given the head of a linked list, return the list after sorting it in ascending order.
+
+Follow up: Can you sort the linked list in O(n logn) time 
+Input: head = [4,2,1,3]
+Output: [1,2,3,4]
+
+
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode getMid(ListNode head) {
+        ListNode slow = null;
+        while (head != null && head.next != null) {
+            slow = (slow == null) ? head : slow.next;
+            head = head.next.next;
+        }
+        ListNode mid = slow.next;
+        slow.next = null;
+        return mid;
+    }
+    
+    public ListNode merge(ListNode left, ListNode right){
+        ListNode head = new ListNode();
+        ListNode tail = head;
+        
+        
+        while(left != null && right != null){
+            if(right.val > left.val){
+                tail.next = left;
+                left = left.next;
+            } else{
+                tail.next = right;
+                right = right.next;
+            }
+            tail = tail.next;
+        }
+        tail.next = (left != null) ? left : right;
+        return head.next;
+    }
+    public ListNode helper_sort(ListNode head){
+        if(head == null || head.next == null) return head;
+        ListNode mid = getMid(head);
+        ListNode left = helper_sort(head);
+        ListNode right = helper_sort(mid);
+        
+        // if(left != null)
+        //     System.out.println("left: "+ left.val );
+        // if(right != null)
+        //     System.out.println("right: "+ right.val);
+        return merge(left, right);
+    }
+    
+    public ListNode sortList(ListNode head) {
+        return helper_sort(head);
+    }
+}
